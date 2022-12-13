@@ -13,7 +13,7 @@ public class LeaveApplication {
     private int id;
     private int empCode;
     private String leaveType;
-    private String Remarks;
+    private String remarks;
     private String fromDate;
     private String toDate;
     private String applyDate;
@@ -25,7 +25,7 @@ public class LeaveApplication {
         this.id = id;
         this.empCode = empCode;
         this.leaveType = leaveType;
-        Remarks = remarks;
+        this.remarks = remarks;
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.applyDate = applyDate;
@@ -57,11 +57,11 @@ public class LeaveApplication {
     }
 
     public String getRemarks() {
-        return Remarks;
+        return remarks;
     }
 
     public void setRemarks(String remarks) {
-        Remarks = remarks;
+        this.remarks = remarks;
     }
 
     public String getFromDate() {
