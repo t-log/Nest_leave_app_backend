@@ -14,7 +14,14 @@ public interface EmployeeDao extends CrudRepository<Employee,Integer> {
 
     @Modifying
     @Transactional
-    @Query(value ="DELETE FROM `employees` WHERE `id`=:id" ,nativeQuery = true)
+    @Query(value ="DELETE FROM `employees` WHERE `emp_code`=:id" ,nativeQuery = true)
     void deleteEmployee(@Param("id") Integer id);
+
+
+    @Query(value ="SELECT * FROM `employees` WHERE `emp_code`=:id" ,nativeQuery = true)
+    List<Employee> search(@Param("id") Integer id);
+
+    @Query(value ="SELECT * FROM `employees` WHERE `email`=:email AND `password`=:password" ,nativeQuery = true)
+    List<Employee> validateEmployee(@Param("email") String email,@Param("password") String password);
 
 }

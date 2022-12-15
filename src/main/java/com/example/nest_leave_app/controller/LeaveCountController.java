@@ -1,28 +1,26 @@
 package com.example.nest_leave_app.controller;
 
-import com.example.nest_leave_app.dao.GuardDao;
+import com.example.nest_leave_app.dao.LeaveCountDao;
 import com.example.nest_leave_app.model.Employee;
 import com.example.nest_leave_app.model.LeaveCount;
-import com.example.nest_leave_app.model.SecurityGuard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Guard;
+import java.util.List;
 
 @RestController
-public class GuardController {
+public class LeaveCountController {
 
     @Autowired
-    private GuardDao gdao;
+    private LeaveCountDao leaveCountDao;
 
-    @CrossOrigin(origins = "*")
-    @PostMapping(path = "/addguard",consumes = "application/json",produces = "application/json")
-    public String addGuard(@RequestBody SecurityGuard g)
-    {
-        gdao.save(g);
-        return "{\"status\":\"success\"}";
-    }
+//    @CrossOrigin(origins = "*")
+//    @PostMapping(path = "/remainingleaves",consumes = "application/json",produces = "application/json")
+//    public LeaveCount searchEmployee(@RequestBody LeaveCount lc)
+//    {
+//        return leaveCountDao.remainingLeaves(lc.getEmpCode());
+//    }
 }
