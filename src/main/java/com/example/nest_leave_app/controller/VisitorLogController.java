@@ -1,15 +1,14 @@
 package com.example.nest_leave_app.controller;
 
 import com.example.nest_leave_app.dao.VisitorLogDao;
+import com.example.nest_leave_app.model.Employee;
 import com.example.nest_leave_app.model.EmployeeLog;
 import com.example.nest_leave_app.model.VisitorLog;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Handler;
 
 @RestController
@@ -36,5 +35,11 @@ public class VisitorLogController {
         visitorLogDao.updateExitLogVisitor(vlog.getId(),vlog.getExitTime());
         hashmap.put("status","success");
         return hashmap;
+    }
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = "/viewvisitorlog")
+    public List<VisitorLog> viewEmployee()
+    {
+        return (List<VisitorLog>) visitorLogDao.findAll();
     }
 }

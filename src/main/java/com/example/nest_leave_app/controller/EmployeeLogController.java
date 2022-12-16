@@ -4,11 +4,12 @@ import com.example.nest_leave_app.dao.EmployeeLogDao;
 import com.example.nest_leave_app.model.Employee;
 import com.example.nest_leave_app.model.EmployeeLog;
 import com.example.nest_leave_app.model.LeaveCount;
+import com.example.nest_leave_app.model.VisitorLog;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class EmployeeLogController {
@@ -30,5 +31,11 @@ public class EmployeeLogController {
     {
         employeeLogDao.updateExitLog(elog.getEmpCode(),elog.getExitTime());
         return "{\"status\":\"success\"}";
+    }
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = "/viewemplog")
+    public List<Map<String,String>> viewEmployee()
+    {
+        return (List<Map<String,String>>) employeeLogDao.getLogWithEmpName();
     }
 }
