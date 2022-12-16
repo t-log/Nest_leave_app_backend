@@ -28,63 +28,11 @@ public class LeaveApplicationController{
     public HashMap<String, String> update(@RequestBody LeaveApplication la)
     {
         HashMap<String,String> hashmap= new HashMap<>();
-
-        String start=la.getFromDate();
-        String end=la.getToDate();
-        int daysDifference=daysBetweenDates(start,end);
-        System.out.println("Total days of absence:"+daysDifference);
         lveapldao.save(la);
-        int empC=la.getEmpCode();
-        LeaveCount lc = leaveCountDao.getEmpObject(empC);  //to get the count object of the corresponding leave application
-        System.out.println("The empCode of corresponding Leave Application from counts table:"+lc.getEmpCode());
-        System.out.println(la.getLeaveType());
-
-        if(la.getLeaveType().equals("Sick"))
-        {
-            if(daysDifference<=lc.getSickLeaveCount())
-            {
-                lc.setSickLeaveCount(lc.getCasualLeaveCount()-daysDifference);
-                leaveCountDao.save(lc);
-            }
-            else
-                System.out.println("Sick leaves exhausted");
-                hashmap.put("status","failed");
-        }
-        else if(la.getLeaveType().equals("Special"))
-        {
-            if(daysDifference<=lc.getSpecialLeaveCount())
-            {
-                lc.setSpecialLeaveCount(lc.getCasualLeaveCount()-daysDifference);
-                leaveCountDao.save(lc);
-            }
-            else
-                System.out.println("Special leaves exhausted");
-                hashmap.put("status","failed");
-        }
-        else
-        {
-            System.out.println(lc.getCasualLeaveCount());
-            System.out.println("Inside casual condition");
-            if(daysDifference<=lc.getCasualLeaveCount())
-            {
-//                System.out.println("Inside if in casual condition");
-                lc.setCasualLeaveCount(lc.getCasualLeaveCount()-daysDifference);
-                leaveCountDao.save(lc);
-            }
-            else
-//                System.out.println("Casual leaves exhausted");
-                hashmap.put("status","failed");
-        }
         hashmap.put("status","success");
+        hashmap.put("leaveId",String.valueOf(la.getId()));
         return hashmap;
     }
-    public int daysBetweenDates(String data1,String data2)
-    {
-        LocalDate dt1 = LocalDate.parse(data1);
-        LocalDate dt2 = LocalDate.parse(data2);
-        return  Math.abs((int) ChronoUnit.DAYS.between(dt1,dt2));
-    }
-
     @CrossOrigin(origins = "*")
     @PostMapping(path = "/leavestatus",consumes = "application/json",produces = "application/json")
     public List<LeaveApplication> leaveStatus(@RequestBody LeaveApplication la)
@@ -103,8 +51,74 @@ public class LeaveApplicationController{
     @PostMapping(path = "/decide",consumes = "application/json",produces = "application/json")
     public String leaveDecide(@RequestBody LeaveApplication la)
     {
-        lveapldao.decide(la.getEmpCode(), la.getStatus());
-        return "{\"status\":\"success\"}";
+        if(la.getStatus()==2)
+        {
+            HashMap<String,String> hashmap= new HashMap<>();
+            String start=la.getFromDate();
+            String end=la.getToDate();
+            int daysDifference=daysBetweenDates(start,end);
+            System.out.println("Total days of absence:"+daysDifference);
+
+            int empC=la.getEmpCode();
+            LeaveCount lc = leaveCountDao.getEmpObject(empC);  //to get the count object of the corresponding leave application
+            System.out.println("The empCode of corresponding Leave Application from counts table:"+lc.getEmpCode());
+            System.out.println(la.getLeaveType());
+
+            if(la.getLeaveType().equals("Sick"))
+            {
+                if(daysDifference<=lc.getSickLeaveCount())
+                {
+                    lc.setSickLeaveCount(lc.getCasualLeaveCount()-daysDifference);
+                    leaveCountDao.save(lc);
+                }
+                else
+                {
+                    System.out.println("Sick leaves exhausted");
+                    hashmap.put("status", "failed");
+                }
+            }
+            else if(la.getLeaveType().equals("Special"))
+            {
+                if(daysDifference<=lc.getSpecialLeaveCount())
+                {
+                    lc.setSpecialLeaveCount(lc.getCasualLeaveCount()-daysDifference);
+                    leaveCountDao.save(lc);
+                }
+                else
+                {
+                    System.out.println("Special leaves exhausted");
+                    hashmap.put("status", "failed");
+                }
+            }
+            else
+            {
+                System.out.println(lc.getCasualLeaveCount());
+                System.out.println("Inside casual condition");
+                if(daysDifference<=lc.getCasualLeaveCount())
+                {
+                    lc.setCasualLeaveCount(lc.getCasualLeaveCount()-daysDifference);
+                    leaveCountDao.save(lc);
+                }
+                else
+                {
+                    System.out.println("Casual leaves exhausted");
+                    hashmap.put("status", "failed");
+                }
+            }
+            lveapldao.decide(la.getEmpCode(), la.getStatus());
+            return "{\"status\":\"success\"}";
+        }
+
+            lveapldao.decide(la.getEmpCode(), la.getStatus());
+            return "{\"status\":\"success\"}";
+
+
+    }
+    public int daysBetweenDates(String data1,String data2)
+    {
+        LocalDate dt1 = LocalDate.parse(data1);
+        LocalDate dt2 = LocalDate.parse(data2);
+        return  Math.abs((int) ChronoUnit.DAYS.between(dt1,dt2));
     }
 
 
