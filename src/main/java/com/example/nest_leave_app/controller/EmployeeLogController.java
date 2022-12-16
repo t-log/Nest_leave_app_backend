@@ -8,6 +8,8 @@ import com.example.nest_leave_app.model.VisitorLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,8 +23,18 @@ public class EmployeeLogController {
     @PostMapping(path = "/addemplog",consumes = "application/json",produces = "application/json")
     public String addEmployeeLog(@RequestBody EmployeeLog elog)
     {
-        employeeLogDao.save(elog);
-        return "{\"status\":\"success\"}";
+//        HashMap<String,String> hashmap = new HashMap<String,String>();
+        ArrayList<Integer> empsNotOnLeave= employeeLogDao.checkIfEmpOnLeave(elog.getDate());
+        if(empsNotOnLeave.contains(elog.getEmpCode()))
+        {
+            employeeLogDao.save(elog);
+            return "{\"status\":\"success\"}";
+        }
+        else
+        {
+            return "{\"status\":\"failed\"}";
+        }
+
     }
 
     @CrossOrigin(origins = "*")

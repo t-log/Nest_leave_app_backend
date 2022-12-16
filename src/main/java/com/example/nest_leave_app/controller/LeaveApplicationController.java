@@ -68,7 +68,7 @@ public class LeaveApplicationController{
             {
                 if(daysDifference<=lc.getSickLeaveCount())
                 {
-                    lc.setSickLeaveCount(lc.getCasualLeaveCount()-daysDifference);
+                    lc.setSickLeaveCount(lc.getSickLeaveCount()-daysDifference);
                     leaveCountDao.save(lc);
                 }
                 else
@@ -81,7 +81,7 @@ public class LeaveApplicationController{
             {
                 if(daysDifference<=lc.getSpecialLeaveCount())
                 {
-                    lc.setSpecialLeaveCount(lc.getCasualLeaveCount()-daysDifference);
+                    lc.setSpecialLeaveCount(lc.getSpecialLeaveCount()-daysDifference);
                     leaveCountDao.save(lc);
                 }
                 else
@@ -105,11 +105,11 @@ public class LeaveApplicationController{
                     hashmap.put("status", "failed");
                 }
             }
-            lveapldao.decide(la.getEmpCode(), la.getStatus());
-            return "{\"status\":\"success\"}";
+//            lveapldao.decide(la.getEmpCode(), la.getStatus());
+//            return "{\"status\":\"success\"}";
         }
 
-            lveapldao.decide(la.getEmpCode(), la.getStatus());
+            lveapldao.decide(la.getEmpCode(), la.getStatus(),la.getId());
             return "{\"status\":\"success\"}";
 
 

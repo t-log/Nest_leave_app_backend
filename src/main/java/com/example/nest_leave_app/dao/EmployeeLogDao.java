@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,4 +19,7 @@ public interface EmployeeLogDao extends CrudRepository<EmployeeLog,Integer> {
 
     @Query(value ="SELECT l.`id`, l.`date`, l.`emp_code`, l.`entry_time`, l.`exit_time`, e.`name` FROM `logs_employee` l JOIN employees e on l.emp_code=e.id" ,nativeQuery = true)
     List<Map<String,String>> getLogWithEmpName();
+
+    @Query(value ="SELECT `id` FROM `employees` WHERE `id` NOT IN (SELECT `emp_code` FROM `leaves` WHERE :todaysDate BETWEEN `from_date` AND `to_date` and status=2)" ,nativeQuery = true)
+    ArrayList<Integer> checkIfEmpOnLeave(@Param ("todaysDate") String todaysDate);
 }
